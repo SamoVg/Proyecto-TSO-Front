@@ -78,7 +78,7 @@ export const MapSelector = () => {
 
     const request = {
       input: searchText,
-      componentRestrictions: { country: 'mx', administrative_area_level_1: 'Nuevo León' }, 
+      componentRestrictions: { country: 'mx' }, 
     };
 
     autocompleteService.current.getPlacePredictions(request, (predictions, status) => {
