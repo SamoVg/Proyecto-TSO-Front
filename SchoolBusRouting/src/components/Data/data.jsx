@@ -49,38 +49,22 @@ export const DataScreen = () => {
 
   // Cargar datos iniciales desde localStorage
   useEffect(() => {
-    const loadStudents = () => {
-      try {
-        const savedStudents = localStorage.getItem('schoolTransportStudents');
-        if (savedStudents) {
-          setStudents(JSON.parse(savedStudents));
-        } else {
-          // Datos de ejemplo iniciales si no hay nada guardado
-          const exampleStudents = [
-            {
-              id: 1,
-              name: 'Alan Vega',
-              calle: 'Flor de Belén',
-              numero: '431',
-              colonia: 'Colinas de San Juan',
-            },
-            {
-              id: 2,
-              name: 'Brandon Escobedo',
-              calle: 'Flor de Belén',
-              numero: '473',
-              colonia: 'Colinas de San Juan',
-            }
-          ];
-          setStudents(exampleStudents);
-          localStorage.setItem('schoolTransportStudents', JSON.stringify(exampleStudents));
-        }
-      } catch (error) {
-        console.error('Error loading students:', error);
-      } finally {
-        setIsLoading(false);
+  const loadStudents = () => {
+    try {
+      const savedStudents = localStorage.getItem('schoolTransportStudents');
+      if (savedStudents) {
+        setStudents(JSON.parse(savedStudents));
+      } else {
+        // Si no hay datos guardados, inicializa con un array vacío
+        setStudents([]);
+        localStorage.setItem('schoolTransportStudents', JSON.stringify([]));
       }
-    };
+    } catch (error) {
+      console.error('Error loading students:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
     loadStudents();
   }, []);
@@ -115,6 +99,10 @@ export const DataScreen = () => {
     navigate(`/editar-estudiante/${id}`);
   };
 
+  const goToHome = () => {
+    navigate('/homescreen');
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
@@ -139,7 +127,7 @@ export const DataScreen = () => {
         <div className="bg-blue-800 p-6 text-white">
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <button 
-              onClick={() => navigate(-1)} 
+              onClick={goToHome}  // Cambiado de navigate(-1) a goToHome
               className="text-white hover:text-yellow-300 transition-colors"
             >
               ←
