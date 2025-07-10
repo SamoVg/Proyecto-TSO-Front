@@ -20,7 +20,7 @@ export const HomeScreen = () => {
         {/* Botones con navegación */}
         <div className="flex flex-col gap-4">
           <button 
-            onClick={() => navigate("/maps")}
+            onClick={() => navigate("/directions")}
             className="flex items-center justify-center gap-2 py-4 px-6 bg-blue-800 text-white font-semibold rounded-xl hover:-translate-y-1 hover:shadow-md hover:shadow-blue-200 transition-all"
           >
             <span>📍</span> Mostrar Ruta

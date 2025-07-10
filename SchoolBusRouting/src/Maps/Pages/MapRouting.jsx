@@ -9,6 +9,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { API_KEY } from "../../constants/googleHeaders";
+import { RUTA_MAT_OPT, RUTA_MAT_SINOPT, RUTA_VESP_OPT, RUTA_VESP_SINOPT } from "../../constants/rutas";
 
 export const MapRouting = () => {
   const mapRef = useRef(null);
@@ -19,27 +20,30 @@ export const MapRouting = () => {
 
   // Estados para los puntos en orden específico
   const [routePoints, setRoutePoints] = useState([
-    "Av del Paraíso 133, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Lirios N, Juárez, 67250 Cdad. Benito Juárez, N.L., México",
-    "Madre Selva 608A, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
-    "Tulipán Rojo 116, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
-    "Tulipán Rojo 126B, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
-    "Bola de Nieve 605B, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
-    "Malva 112, 67254 Cdad. Benito Juárez, N.L., México",
-    "Tulipán rojo 113, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México ",
-    "Magnolia 187, 67254 Cdad. Benito Juárez, N.L., México",
-    "Magnolia 180, 67254 Cdad. Benito Juárez, N.L., México",
-    "Violeta 130, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Lila Azul 103, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Alcatraz 402, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Alhelí 339, Colinas de San Juan(Colinas de La Morena), 67250 Cdad. Benito Juárez, N.L., México",
-    "Av Primavera 443, Villas de San Juan, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Azucena 402, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Flor de Belén 473, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Ribera de Los Salinas 357, 67254 Cdad. Benito Juárez, N.L., México",
-    "Flor de Belén 431, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
-    "Lirios N, Juárez, 67250 Cdad. Benito Juárez, N.L., México"
-    
+
+
+"Av del Paraíso 133, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Hacienda del Refugio 127, Centro de Benito Juárez, 67250 Cdad. Benito Juárez, N.L., México",
+"Madre Selva 610, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
+"Tulipán Rojo 126B, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
+"Tulipán Rojo 154a, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
+"Azalea 608, Centro de Benito Juárez, 67250 Cdad. Benito Juárez, N.L., México",
+"Azalea 598A, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
+"Azalea 592, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
+"Bola de Nieve 585B, Centro de Benito Juárez, 67254 Cdad. Benito Juárez, N.L., México",
+
+"Helecho 122, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Azucena 482, Villas de San Jose, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Tamarindo 148, 67254 Cdad. Benito Juárez, N.L., México",
+"Eucalipto, 67254 Cdad. Benito Juárez, N.L., México",
+"Azahares 391, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Clavel 403, Villas de San Jose, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Clavel 336, Villas de San Jose, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Clavel 348, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+
+"Av Primavera 332, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Av Primavera 330, Colinas de San Juan(Colinas de La Morena), 67254 Cdad. Benito Juárez, N.L., México",
+"Lirios N, Juárez, 67250 Cdad. Benito Juárez, N.L., México"
   ]);
 
   const [routeInfo, setRouteInfo] = useState(null);
@@ -154,7 +158,7 @@ export const MapRouting = () => {
 
             return {
               instruction: step.instructions.replace(/<[^>]*>/g, ""), // Quitar HTML tags
-              distance: step.distance.text || "N/A",
+              distance: step.distance.text|| "N/A",
               duration: step.duration.text || "N/A",
               maneuver: step.maneuver || "straight",
             };
@@ -164,7 +168,7 @@ export const MapRouting = () => {
         segmentInfo.push({
           from: routePoints[index] || "Punto desconocido",
           to: routePoints[index + 1] || "Punto desconocido",
-          distance: leg.distance.text || "N/A",
+          distance: leg.distance.text  || "N/A",
           duration: leg.duration.text || "N/A",
           startAddress: leg.start_address || "Dirección no disponible",
           endAddress: leg.end_address || "Dirección no disponible",
@@ -173,8 +177,8 @@ export const MapRouting = () => {
       });
 
       setRouteInfo({
-        totalDistance: (totalDistance / 1000).toFixed(1) + " km",
-        totalDuration: Math.round(totalDuration / 60) + " minutos",
+        totalDistance: (totalDistance / 1000).toFixed(1) + ' km',
+        totalDuration: Math.round(totalDuration / 60 ) + ' minutos',
         segments: segmentInfo,
       });
     } catch (error) {
@@ -225,6 +229,7 @@ export const MapRouting = () => {
       travelMode: window.google.maps.TravelMode.DRIVING,
       unitSystem: window.google.maps.UnitSystem.METRIC,
       region: "MX",
+
     };
 
     try {
@@ -320,11 +325,11 @@ export const MapRouting = () => {
     console.log(routePoints);
   };
 
-  const [obj, setObjt] = useState("");
+ /*  const [obj, setObjt] = useState("");
   const handleJson = () => {
     const arrCiudad = routePoints.map((x) => ({ direccion: x }));
     setObjt(JSON.stringify(arrCiudad));
-  };
+  }; */
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
@@ -342,9 +347,19 @@ export const MapRouting = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 w-screen">
-      
-      <div className="" onClick={handleJson}>
-        Boton para json {obj}
+      <div className="flex flex-row mb-4 gap-3">
+        <div className="bg-blue-600 rounded-lg text-white p-6 cursor-pointer" onClick={() => setRoutePoints(RUTA_MAT_SINOPT)}>
+          Ruta Matutina sin Optimizar
+        </div>
+        <div className="bg-blue-600 rounded-lg text-white p-6 cursor-pointer" onClick={() => setRoutePoints(RUTA_MAT_OPT)}>
+          Ruta Matutina Optimizada
+        </div>
+        <div className="bg-orange-400 rounded-lg text-white p-6 cursor-pointer" onClick={() => setRoutePoints(RUTA_VESP_SINOPT)}>
+          Ruta Vespertina sin Optimizar
+        </div>
+        <div className="bg-orange-400 rounded-lg text-white p-6 cursor-pointer" onClick={() => setRoutePoints(RUTA_VESP_OPT)}>
+          Ruta Matutina Optimizada
+        </div>
       </div>
       <div className="mx-auto pr-2">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -362,7 +377,6 @@ export const MapRouting = () => {
             {/* Panel de control */}
             <div className="lg:col-span-1 space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg">
-                
                 {/* Botón calcular */}
                 <button
                   onClick={calculateRoute}
@@ -445,8 +459,6 @@ export const MapRouting = () => {
                     {error}
                   </div>
                 )}
-
-               
               </div>
             </div>
 
@@ -458,131 +470,127 @@ export const MapRouting = () => {
               >
                 <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
               </div>
-
-
             </div>
 
-                         {/* Información de la ruta */}
-                {routeInfo && (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-md">
-                    <h4 className="font-semibold text-green-800 mb-3">
-                      Resumen de la Ruta
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-green-700">Distancia total:</span>
-                        <span className="font-semibold">
-                          {routeInfo.totalDistance}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-green-700">Tiempo estimado:</span>
-                        <span className="font-semibold">
-                          {routeInfo.totalDuration}
-                        </span>
-                      </div>
-                    </div>
+            {/* Información de la ruta */}
+            {routeInfo && (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-md">
+                <h4 className="font-semibold text-green-800 mb-3">
+                  Resumen de la Ruta
+                </h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-green-700">Distancia total:</span>
+                    <span className="font-semibold">
+                      {routeInfo.totalDistance}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-green-700">Tiempo estimado:</span>
+                    <span className="font-semibold">
+                      {routeInfo.totalDuration}
+                    </span>
+                  </div>
+                </div>
 
-                    <div className="mt-4">
-                      <h5 className="font-semibold text-green-800 mb-2">
-                        Segmentos de Ruta:
-                      </h5>
-                      <div className="space-y-3">
-                        {routeInfo.segments.map((segment, index) => (
-                          <div
-                            key={index}
-                            className="bg-white rounded-lg border overflow-hidden"
-                          >
-                            {/* Header del segmento */}
-                            <div
-                              className="p-3 bg-blue-50 border-b cursor-pointer hover:bg-blue-100 transition-colors"
-                              onClick={() => toggleSegmentExpansion(index)}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-2">
-                                  <span className="font-bold text-blue-600">
-                                    {String.fromCharCode(65 + index)} →{" "}
-                                    {String.fromCharCode(65 + index + 1)}
-                                  </span>
-                                  <span className="text-sm text-gray-600">
-                                    {segment.distance} • {segment.duration}
-                                  </span>
-                                </div>
-                                {expandedSegments[index] ? (
-                                  <ChevronDown
-                                    size={16}
-                                    className="text-blue-600"
-                                  />
-                                ) : (
-                                  <ChevronRight
-                                    size={16}
-                                    className="text-blue-600"
-                                  />
-                                )}
+                <div className="mt-4">
+                  <h5 className="font-semibold text-green-800 mb-2">
+                    Segmentos de Ruta:
+                  </h5>
+                  <div className="space-y-3">
+                    {routeInfo.segments.map((segment, index) => (
+                      <div
+                        key={index}
+                        className="bg-white rounded-lg border overflow-hidden"
+                      >
+                        {/* Header del segmento */}
+                        <div
+                          className="p-3 bg-blue-50 border-b cursor-pointer hover:bg-blue-100 transition-colors"
+                          onClick={() => toggleSegmentExpansion(index)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="font-bold text-blue-600">
+                                {String.fromCharCode(65 + index)} →{" "}
+                                {String.fromCharCode(65 + index + 1)}
+                              </span>
+                              <span className="text-sm text-gray-600">
+                                {segment.distance} • {segment.duration}
+                              </span>
+                            </div>
+                            {expandedSegments[index] ? (
+                              <ChevronDown
+                                size={16}
+                                className="text-blue-600"
+                              />
+                            ) : (
+                              <ChevronRight
+                                size={16}
+                                className="text-blue-600"
+                              />
+                            )}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {segment.from} → {segment.to}
+                          </div>
+                        </div>
+
+                        {/* Instrucciones detalladas */}
+                        {expandedSegments[index] && (
+                          <div className="p-3">
+                            <div className="text-xs text-gray-500 mb-2">
+                              <div>
+                                <strong>Desde:</strong> {segment.startAddress}
                               </div>
-                              <div className="text-xs text-gray-500 mt-1">
-                                {segment.from} → {segment.to}
+                              <div>
+                                <strong>Hasta:</strong> {segment.endAddress}
                               </div>
                             </div>
 
-                            {/* Instrucciones detalladas */}
-                            {expandedSegments[index] && (
-                              <div className="p-3">
-                                <div className="text-xs text-gray-500 mb-2">
-                                  <div>
-                                    <strong>Desde:</strong>{" "}
-                                    {segment.startAddress}
-                                  </div>
-                                  <div>
-                                    <strong>Hasta:</strong> {segment.endAddress}
-                                  </div>
-                                </div>
-
-                                <div className="space-y-2 max-h-60 overflow-y-auto">
-                                  <h6 className="font-semibold text-gray-700 text-sm">
-                                    Instrucciones paso a paso:
-                                  </h6>
-                                  {segment.instructions.map(
-                                    (instruction, stepIndex) => (
-                                      <div
-                                        key={stepIndex}
-                                        className="flex items-start space-x-2 p-2 bg-gray-50 rounded text-xs"
-                                      >
-                                        <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xs">
-                                          {stepIndex + 1}
-                                        </div>
-                                        <div className="flex-1">
-                                          <div className="flex items-center space-x-1 mb-1">
-                                            <span className="text-lg">
-                                              {getManeuverIcon(
-                                                instruction.maneuver
-                                              )}
-                                            </span>
-                                            <span className="text-gray-600">
-                                              {instruction.distance} •{" "}
-                                              {instruction.duration}
-                                            </span>
-                                          </div>
-                                          <div className="text-gray-800">
-                                            {instruction.instruction}
-                                          </div>
-                                        </div>
+                            <div className="space-y-2 max-h-60 overflow-y-auto">
+                              <h6 className="font-semibold text-gray-700 text-sm">
+                                Instrucciones paso a paso:
+                              </h6>
+                              {segment.instructions.map(
+                                (instruction, stepIndex) => (
+                                  <div
+                                    key={stepIndex}
+                                    className="flex items-start space-x-2 p-2 bg-gray-50 rounded text-xs"
+                                  >
+                                    <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xs">
+                                      {stepIndex + 1}
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="flex items-center space-x-1 mb-1">
+                                        <span className="text-lg">
+                                          {getManeuverIcon(
+                                            instruction.maneuver
+                                          )}
+                                        </span>
+                                        <span className="text-gray-600">
+                                          {instruction.distance} •{" "}
+                                          {instruction.duration}
+                                        </span>
                                       </div>
-                                    )
-                                  )}
-                                </div>
-                              </div>
-                            )}
+                                      <div className="text-gray-800">
+                                        {instruction.instruction}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                            </div>
                           </div>
-                        ))}
+                        )}
                       </div>
-                    </div>
+                    ))}
                   </div>
-                )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 };
-

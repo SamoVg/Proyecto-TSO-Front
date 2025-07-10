@@ -1,20 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import { MapPin, Search, Loader, Navigation } from 'lucide-react';
-import { API_KEY } from '../../constants/googleHeaders';
+import { useState, useEffect, useRef } from "react";
+import { MapPin, Search, Loader, Navigation } from "lucide-react";
+import { API_KEY } from "../../constants/googleHeaders";
 
 export const MapSelector = () => {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [predictions, setPredictions] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
-  
+
   // Refs for Google Places services
   const autocompleteService = useRef(null);
   const placesService = useRef(null);
   const geocoder = useRef(null);
-
 
   // Load Google Maps API
   useEffect(() => {
@@ -24,29 +23,32 @@ export const MapSelector = () => {
         return;
       }
 
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
       script.async = true;
       script.defer = true;
       script.onload = initializeServices;
       script.onerror = () => {
-        setError('Failed to load Google Maps API. Please check your API key.');
+        setError("Failed to load Google Maps API. Please check your API key.");
       };
-      
+
       document.head.appendChild(script);
     };
 
     const initializeServices = () => {
       if (window.google && window.google.maps) {
         // Initialize Google Places services
-        autocompleteService.current = new window.google.maps.places.AutocompleteService();
-        
+        autocompleteService.current =
+          new window.google.maps.places.AutocompleteService();
+
         // Create a dummy div for PlacesService (required by Google)
-        const dummyDiv = document.createElement('div');
-        placesService.current = new window.google.maps.places.PlacesService(dummyDiv);
-        
+        const dummyDiv = document.createElement("div");
+        placesService.current = new window.google.maps.places.PlacesService(
+          dummyDiv
+        );
+
         geocoder.current = new window.google.maps.Geocoder();
-        
+
         setIsGoogleLoaded(true);
       }
     };
@@ -67,32 +69,35 @@ export const MapSelector = () => {
     return () => clearTimeout(timeoutId);
   }, [input, isGoogleLoaded]);
 
-
-  
   // Search for places using Google Places Autocomplete
   const searchPlaces = (searchText) => {
     if (!autocompleteService.current) return;
 
     setLoading(true);
-    setError('');
+    setError("");
 
     const request = {
       input: searchText,
-      componentRestrictions: { country: 'mx' }, 
+      componentRestrictions: { country: "mx" },
     };
 
-    autocompleteService.current.getPlacePredictions(request, (predictions, status) => {
-      setLoading(false);
-      
-      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        setPredictions(predictions || []);
-      } else if (status === window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-        setPredictions([]);
-      } else {
-        setError('Error fetching suggestions. Please try again.');
-        setPredictions([]);
+    autocompleteService.current.getPlacePredictions(
+      request,
+      (predictions, status) => {
+        setLoading(false);
+
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          setPredictions(predictions || []);
+        } else if (
+          status === window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS
+        ) {
+          setPredictions([]);
+        } else {
+          setError("Error fetching suggestions. Please try again.");
+          setPredictions([]);
+        }
       }
-    });
+    );
   };
 
   // Get place details when user selects a prediction
@@ -106,19 +111,19 @@ export const MapSelector = () => {
     const request = {
       placeId: prediction.place_id,
       fields: [
-        'name',
-        'formatted_address',
-        'geometry',
-        'address_components',
-        'place_id',
-        'types',
-        'url'
-      ]
+        "name",
+        "formatted_address",
+        "geometry",
+        "address_components",
+        "place_id",
+        "types",
+        "url",
+      ],
     };
 
     placesService.current.getDetails(request, (place, status) => {
       setLoading(false);
-      
+
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
         const placeDetails = {
           place_id: place.place_id,
@@ -126,16 +131,16 @@ export const MapSelector = () => {
           formatted_address: place.formatted_address,
           coordinates: {
             lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng()
+            lng: place.geometry.location.lng(),
           },
           address_components: place.address_components,
           types: place.types,
-          google_maps_url: place.url
+          google_maps_url: place.url,
         };
-        
+
         setSelectedPlace(placeDetails);
       } else {
-        setError('Error getting place details. Please try again.');
+        setError("Error getting place details. Please try again.");
       }
     });
   };
@@ -143,7 +148,7 @@ export const MapSelector = () => {
   // Get user's current location
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
-      setError('Geolocation is not supported by this browser.');
+      setError("Geolocation is not supported by this browser.");
       return;
     }
 
@@ -151,34 +156,34 @@ export const MapSelector = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        
+
         // Reverse geocode to get address
         if (geocoder.current) {
           const latlng = { lat: latitude, lng: longitude };
-          
+
           geocoder.current.geocode({ location: latlng }, (results, status) => {
             setLoading(false);
-            
-            if (status === 'OK' && results[0]) {
+
+            if (status === "OK" && results[0]) {
               const place = results[0];
               setInput("");
               setSelectedPlace({
                 place_id: place.place_id,
-                name: 'Current Location',
+                name: "Current Location",
                 formatted_address: place.formatted_address,
                 coordinates: { lat: latitude, lng: longitude },
                 address_components: place.address_components,
-                types: place.types
+                types: place.types,
               });
             } else {
-              setError('No pudimos obtener tu ubicacion.');
+              setError("No pudimos obtener tu ubicacion.");
             }
           });
         }
       },
       (error) => {
         setLoading(false);
-        setError('Unable to retrieve your location.' + error);
+        setError("Unable to retrieve your location." + error);
       }
     );
   };
@@ -188,16 +193,20 @@ export const MapSelector = () => {
     setSelectedPlace(null);
   };
 
+  
+
   // Extract specific address components
   const getAddressComponent = (components, type) => {
-    const component = components?.find(comp => comp.types.includes(type));
-    return component ? component.long_name : '';
+    const component = components?.find((comp) => comp.types.includes(type));
+    return component ? component.long_name : "";
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Seleccione una direccion</h2>
-      
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">
+        Seleccione una direccion
+      </h2>
+
       {!isGoogleLoaded && (
         <div className="mb-4 p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
           Cargando Direcciones...
@@ -253,10 +262,11 @@ export const MapSelector = () => {
               <MapPin className="h-5 w-5 text-gray-400 mr-2 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
                 <div className="text-sm font-medium text-gray-900">
-                  {prediction.structured_formatting?.main_text || prediction.description}
+                  {prediction.structured_formatting?.main_text ||
+                    prediction.description}
                 </div>
                 <div className="text-xs text-gray-500">
-                  {prediction.structured_formatting?.secondary_text || ''}
+                  {prediction.structured_formatting?.secondary_text || ""}
                 </div>
               </div>
             </div>
@@ -267,53 +277,90 @@ export const MapSelector = () => {
       {/* Selected Place Details */}
       {selectedPlace && (
         <div className="p-4 bg-green-50 border border-green-200 rounded-md">
-          <h3 className="text-lg font-semibold mb-3 text-green-800">Selected Place:</h3>
-          
+          <h3 className="text-lg font-semibold mb-3 text-green-800">
+            Selected Place:
+          </h3>
+
           <div className="space-y-2 text-sm">
             <div>
               <span className="font-medium text-green-800">Name:</span>
               <span className="text-green-700 ml-2">{selectedPlace.name}</span>
             </div>
-            
+
             <div>
               <span className="font-medium text-green-800">Address:</span>
-              <span className="text-green-700 ml-2">{selectedPlace.formatted_address}</span>
+              <span className="text-green-700 ml-2">
+                {selectedPlace.formatted_address}
+              </span>
             </div>
-            
+
             <div>
               <span className="font-medium text-green-800">Coordinates:</span>
               <span className="text-green-700 ml-2">
-                {selectedPlace.coordinates.lat.toFixed(6)}, {selectedPlace.coordinates.lng.toFixed(6)}
+                {selectedPlace.coordinates.lat.toFixed(6)},{" "}
+                {selectedPlace.coordinates.lng.toFixed(6)}
               </span>
             </div>
 
             {selectedPlace.address_components && (
               <div className="mt-3 p-3 bg-white rounded border">
-                <h4 className="font-medium text-green-800 mb-2">Address Components:</h4>
+                <h4 className="font-medium text-green-800 mb-2">
+                  Address Components:
+                </h4>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
                     <span className="font-medium">Calle:</span>
-                    <span className="ml-1">{getAddressComponent(selectedPlace.address_components, 'route')}</span>
+                    <span className="ml-1">
+                      {getAddressComponent(
+                        selectedPlace.address_components,
+                        "route"
+                      )}
+                    </span>
                   </div>
                   <div>
                     <span className="font-medium">Numero:</span>
-                    <span className="ml-1">{getAddressComponent(selectedPlace.address_components, 'street_number')}</span>
+                    <span className="ml-1">
+                      {getAddressComponent(
+                        selectedPlace.address_components,
+                        "street_number"
+                      )}
+                    </span>
                   </div>
                   <div>
                     <span className="font-medium">Ciudad:</span>
-                    <span className="ml-1">{getAddressComponent(selectedPlace.address_components, 'locality')}</span>
+                    <span className="ml-1">
+                      {getAddressComponent(
+                        selectedPlace.address_components,
+                        "locality"
+                      )}
+                    </span>
                   </div>
                   <div>
                     <span className="font-medium">Estado:</span>
-                    <span className="ml-1">{getAddressComponent(selectedPlace.address_components, 'administrative_area_level_1')}</span>
+                    <span className="ml-1">
+                      {getAddressComponent(
+                        selectedPlace.address_components,
+                        "administrative_area_level_1"
+                      )}
+                    </span>
                   </div>
                   <div>
                     <span className="font-medium">Pais:</span>
-                    <span className="ml-1">{getAddressComponent(selectedPlace.address_components, 'country')}</span>
+                    <span className="ml-1">
+                      {getAddressComponent(
+                        selectedPlace.address_components,
+                        "country"
+                      )}
+                    </span>
                   </div>
                   <div>
                     <span className="font-medium">Codigo Postal:</span>
-                    <span className="ml-1">{getAddressComponent(selectedPlace.address_components, 'postal_code')}</span>
+                    <span className="ml-1">
+                      {getAddressComponent(
+                        selectedPlace.address_components,
+                        "postal_code"
+                      )}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -321,14 +368,13 @@ export const MapSelector = () => {
 
             <div>
               <span className="font-medium text-green-800">Place ID:</span>
-              <span className="text-green-700 ml-2 text-xs break-all">{selectedPlace.place_id}</span>
+              <span className="text-green-700 ml-2 text-xs break-all">
+                {selectedPlace.place_id}
+              </span>
             </div>
           </div>
         </div>
       )}
-
-      
     </div>
   );
 };
-
